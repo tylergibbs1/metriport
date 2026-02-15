@@ -15,7 +15,7 @@ import { getETag } from "../../shared/http";
 import { handleParams } from "../helpers/handle-params";
 import { requestLogger } from "../helpers/request-logger";
 import { getUUIDFrom } from "../schemas/uuid";
-import { asyncHandler, getCxIdOrFail, getFromParamsOrFail } from "../util";
+import { asyncHandler, getCxIdOrFail } from "../util";
 import {
   CohortWithCountDTO,
   CohortWithPatientIdsAndCountDTO,
@@ -64,7 +64,7 @@ router.put(
   requestLogger,
   asyncHandler(async (req: Request, res: Response) => {
     const cxId = getCxIdOrFail(req);
-    const id = getFromParamsOrFail("id", req);
+    const id = getUUIDFrom("params", req, "id").orFail();
     const data = cohortUpdateSchema.parse(req.body);
 
     const cohort = await updateCohort({
@@ -92,7 +92,7 @@ router.delete(
   requestLogger,
   asyncHandler(async (req: Request, res: Response) => {
     const cxId = getCxIdOrFail(req);
-    const id = getFromParamsOrFail("id", req);
+    const id = getUUIDFrom("params", req, "id").orFail();
 
     await deleteCohort({
       id,
@@ -118,12 +118,12 @@ router.get(
 
     const cohortsWithCounts = await getCohorts({ cxId });
 
-    const buildCohortWithCountDTO = (cohortWithCount: CohortWithCount): CohortWithCountDTO => {
+    function buildCohortWithCountDTO(cohortWithCount: CohortWithCount): CohortWithCountDTO {
       return {
         cohort: dtoFromCohort(cohortWithCount.cohort),
         patientCount: cohortWithCount.count,
       };
-    };
+    }
 
     return res.status(status.OK).json({
       cohorts: cohortsWithCounts.map(buildCohortWithCountDTO),
@@ -145,7 +145,7 @@ router.get(
   requestLogger,
   asyncHandler(async (req: Request, res: Response) => {
     const cxId = getCxIdOrFail(req);
-    const id = getFromParamsOrFail("id", req);
+    const id = getUUIDFrom("params", req, "id").orFail();
 
     const cohortDetails = await getCohortWithCountOrFail({ id, cxId });
 

@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { getFacilityOrFail } from "../../command/medical/facility/get-facility";
 import { Facility } from "../../domain/medical/facility";
-import { getCxIdOrFail, getFromParamsOrFail, getFromQueryOrFail } from "../util";
+import { getUUIDFrom } from "../schemas/uuid";
+import { getCxIdOrFail } from "../util";
 
 /**
  * Validates the customer has access to the facility and adds the facility and related info to the
@@ -13,7 +14,9 @@ export function facilityAuthorization(
   return async (req: Request, _: Response, next: NextFunction): Promise<void> => {
     const cxId = getCxIdOrFail(req);
     const facilityId =
-      context === "query" ? getFromQueryOrFail("facilityId", req) : getFromParamsOrFail("id", req);
+      context === "query"
+        ? getUUIDFrom("query", req, "facilityId").orFail()
+        : getUUIDFrom("params", req, "id").orFail();
 
     const facility = await getFacilityOrFail({ id: facilityId, cxId });
 

@@ -55,6 +55,7 @@ import {
 import { setPatientFacilitiesSchema } from "./schemas/patient-facilities";
 import { cxRequestMetadataSchema } from "./schemas/request-metadata";
 import { getLatestSuspectsBySuspectGroup } from "../../command/medical/patient/get-suspect";
+import { getUUIDFrom } from "../schemas/uuid";
 
 const router = Router();
 
@@ -75,7 +76,7 @@ router.put(
   requestLogger,
   asyncHandler(async (req: Request, res: Response) => {
     const { cxId, id, patient } = getPatientInfoOrFail(req);
-    const facilityIdParam = getFrom("query").optional("facilityId", req);
+    const facilityIdParam = getUUIDFrom("query", req, "facilityId").optional();
     const rerunPdOnNewDemographics = stringToBoolean(
       getFrom("query").optional("rerunPdOnNewDemographics", req)
     );
@@ -143,7 +144,7 @@ router.delete(
   requestLogger,
   asyncHandler(async (req: Request, res: Response) => {
     const { cxId, id } = getPatientInfoOrFail(req);
-    const facilityId = getFrom("query").optional("facilityId", req);
+    const facilityId = getUUIDFrom("query", req, "facilityId").optional();
 
     const patientDeleteCmd = {
       ...getETag(req),
@@ -266,7 +267,7 @@ router.get(
   requestLogger,
   asyncHandler(async (req: Request, res: Response) => {
     const { patient } = getPatientInfoOrFail(req);
-    const requestId = getFrom("params").orFail("requestId", req);
+    const requestId = getUUIDFrom("params", req, "requestId").orFail();
     const query = patient.data.consolidatedQueries?.find(
       (q: ConsolidatedQuery) => q.requestId === requestId
     );

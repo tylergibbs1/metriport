@@ -1,7 +1,8 @@
 import { z } from "zod";
+import { uuidSchema } from "../../schemas/uuid";
 
 export const allOrSelectPatientIdsSchema = z.object({
-  patientIds: z.array(z.string()).optional(),
+  patientIds: z.array(uuidSchema).optional(),
   all: z.boolean().optional(),
 });
 

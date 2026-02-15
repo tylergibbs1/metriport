@@ -23,6 +23,7 @@ import { toDTO } from "./dtos/documentDTO";
 import { docConversionTypeSchema, docFileNameSchema } from "./schemas/documents";
 import { cxRequestMetadataSchema } from "./schemas/request-metadata";
 import { getPatientPrimaryFacilityIdOrFail } from "../../command/medical/patient/get-patient-facilities";
+import { getUUIDFrom } from "../schemas/uuid";
 
 const router = Router();
 
@@ -110,7 +111,7 @@ router.post(
   patientAuthorization("query"),
   asyncHandler(async (req: Request, res: Response) => {
     const { cxId, id: patientId } = getPatientInfoOrFail(req);
-    const facilityId = getFrom("query").optional("facilityId", req);
+    const facilityId = getUUIDFrom("query", req, "facilityId").optional();
     const override = stringToBoolean(getFrom("query").optional("override", req));
     const cxDocumentRequestMetadata = cxRequestMetadataSchema.parse(req.body);
     const forceCommonwell = stringToBoolean(getFrom("query").optional("commonwell", req));

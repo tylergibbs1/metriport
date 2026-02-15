@@ -28,6 +28,7 @@ import { Config } from "../../shared/config";
 import { requestLogger } from "../helpers/request-logger";
 import { checkRateLimit } from "../middlewares/rate-limiting";
 import { isPaginated, paginated } from "../pagination";
+import { getUUIDFrom } from "../schemas/uuid";
 import {
   asyncHandler,
   getCxIdOrFail,
@@ -59,7 +60,7 @@ router.post(
   requestLogger,
   asyncHandler(async (req: Request, res: Response) => {
     const cxId = getCxIdOrFail(req);
-    const facilityId = getFromQueryOrFail("facilityId", req);
+    const facilityId = getUUIDFrom("query", req, "facilityId").orFail();
     const rerunPdOnNewDemographics = stringToBoolean(
       getFrom("query").optional("rerunPdOnNewDemographics", req)
     );
@@ -121,7 +122,7 @@ router.get(
   requestLogger,
   asyncHandler(async (req: Request, res: Response) => {
     const cxId = getCxIdOrFail(req);
-    const facilityId = getFrom("query").optional("facilityId", req);
+    const facilityId = getUUIDFrom("query", req, "facilityId").optional();
     const fullTextSearchFilters = getFrom("query").optional("filters", req);
 
     // TODO 483 remove this (and respected conditional) once pagination is fully rolled out
@@ -233,7 +234,7 @@ router.post(
   requestLogger,
   asyncHandler(async (req: Request, res: Response) => {
     const cxId = getCxIdOrFail(req);
-    const facilityIdParam = getFromQuery("facilityId", req);
+    const facilityIdParam = getUUIDFrom("query", req, "facilityId").optional();
     const dryRunParam = getFromQueryAsBoolean("dryRun", req);
     // TODO 2330 add cx-metadata to the job and pass it to all webhooks related to this job
 

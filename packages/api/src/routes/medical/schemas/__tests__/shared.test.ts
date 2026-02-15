@@ -1,10 +1,11 @@
+import { faker } from "@faker-js/faker";
 import { allOrSelectPatientIdsRefinedSchema } from "../shared";
 
 describe("allOrSelectPatientIdsRefinedSchema", () => {
   describe("valid cases", () => {
     it("should validate with patientIds only", () => {
       const validData = {
-        patientIds: ["patient-1", "patient-2", "patient-3"],
+        patientIds: [faker.string.uuid(), faker.string.uuid(), faker.string.uuid()],
       };
 
       const result = allOrSelectPatientIdsRefinedSchema.safeParse(validData);
@@ -22,7 +23,7 @@ describe("allOrSelectPatientIdsRefinedSchema", () => {
 
     it("should validate when both patientIds and all (false) are provided", () => {
       const validData = {
-        patientIds: ["patient-1"],
+        patientIds: [faker.string.uuid()],
         all: false,
       };
 
@@ -34,7 +35,7 @@ describe("allOrSelectPatientIdsRefinedSchema", () => {
   describe("mutual exclusivity", () => {
     it("should reject when both patientIds and all (true) are provided", () => {
       const invalidData = {
-        patientIds: ["patient-1"],
+        patientIds: [faker.string.uuid()],
         all: true,
       };
 
@@ -75,7 +76,7 @@ describe("allOrSelectPatientIdsRefinedSchema", () => {
   describe("data type validation", () => {
     it("should reject when patientIds contains non-string values", () => {
       const invalidData = {
-        patientIds: ["patient-1", 123, "patient-3"],
+        patientIds: [faker.string.uuid(), 123, faker.string.uuid()],
       };
 
       const result = allOrSelectPatientIdsRefinedSchema.safeParse(invalidData);
