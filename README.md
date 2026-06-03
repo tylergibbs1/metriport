@@ -31,8 +31,6 @@
    <a href="https://www.ycombinator.com/companies/metriport"><img src="https://img.shields.io/static/v1?label=Y Combinator&message=Metriport&color=orange" alt="YC"></a>
 </p>
 
-### **[Join us on our Slack Community](https://join.slack.com/t/metriport-oss/shared_invite/zt-2jezazysw-~AuXop_rFmWQXKmjYRr~cA) 💬**
-
 ## **Overview**
 
 <div>
@@ -86,8 +84,6 @@ Get started converting using our [Quickstart Guide](https://docs.metriport.com/c
 ## **Getting Started**
 
 Check out the links below to get started with Metriport in minutes!
-
-### **[Slack Community](https://join.slack.com/t/metriport-oss/shared_invite/zt-2jezazysw-~AuXop_rFmWQXKmjYRr~cA) 💬**
 
 ### **[Quickstart Guide](https://docs.metriport.com/medical-api/getting-started/quickstart) 🚀**
 
